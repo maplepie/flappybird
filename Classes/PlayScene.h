@@ -11,6 +11,9 @@ public:
 	virtual bool init();
 	static float myRandom();
 	bool isLoseGame();
+	void createMenu();
+	void startGame(Ref *pSender);
+	void scoreMenu(Ref * pSender);
 	
 	virtual bool onTouchBegan(Touch * touch, Event * event);
 	virtual void onTouchMoved(Touch * touch, Event * event);
@@ -30,6 +33,7 @@ private:
 	Sprite * pipe3;
 	Sprite * pipe4;
 	Size visibleSize;
+	Sprite * startGameTeach;
 };
 
 #endif
