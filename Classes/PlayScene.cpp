@@ -82,10 +82,18 @@ bool PlayScene::init()
 	
 
 	startGameTeach = Sprite::create("teach.png");
-	
 	startGameTeach->setPosition(Vec2(visibleSize.width/2, visibleSize.height/2));
-
 	this->addChild(startGameTeach);
+
+	score = Label::createWithSystemFont("0", "Arial", 40);
+	auto scoreLabel = MenuItemLabel::create(score);
+	scoreLabel->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*7 / 8));
+	Menu * labelMenu = Menu::create(scoreLabel, NULL);
+	labelMenu->setAnchorPoint(Vec2::ZERO);
+	labelMenu->setPosition(Vec2::ZERO);
+	this->addChild(labelMenu);
+
+	getScoreFlag = true;
 
 	this->setTouchEnabled(true);
 	this->setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
@@ -152,7 +160,7 @@ void PlayScene::startGame(Ref * pSender)
 {
 	auto secene = PlayScene::createScene();
 	Director::getInstance()->replaceScene(secene);
-	log("startGame");
+	log("restartGame");
 }
 
 void PlayScene::scoreMenu(Ref * pSender)
@@ -225,6 +233,8 @@ void PlayScene::update(float delay)
 		// 添加随机高度
 		pipe1->setPositionY(ground1->getContentSize().height / 2 * myRandom());
 		pipe2->setPositionY(pipe1->getPositionY() + pipe1->getContentSize().height + visibleSize.height / 5);
+
+		getScoreFlag = true;
 	}
 
 	float otherpipePositionX = pipe3->getPositionX();
@@ -240,6 +250,8 @@ void PlayScene::update(float delay)
 		// 添加随机高度
 		pipe3->setPositionY(ground1->getContentSize().height / 2 * myRandom());
 		pipe4->setPositionY(pipe3->getPositionY() + pipe3->getContentSize().height + visibleSize.height / 5);
+
+		getScoreFlag = true;
 	}
 	//达到最高位置
 	if (bird->getPositionY() + bird->getContentSize().height / 2 > visibleSize.height)
@@ -267,6 +279,12 @@ void PlayScene::update(float delay)
 		bird->setPositionY(bird->getPositionY() - bird->getContentSize().height /11);
 	}
 
+	if (getScoreFlag&&(pipe1->getPositionX() <= bird->getPositionX()||pipe3->getPositionX() <= bird->getPositionX()))
+	{
+		log("score+1");
+		score->setString(__String::createWithFormat("%d", ++currentScore)->getCString());
+		getScoreFlag = false;
+	}
 
 
 }

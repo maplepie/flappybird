@@ -34,6 +34,10 @@ private:
 	Sprite * pipe4;
 	Size visibleSize;
 	Sprite * startGameTeach;
+
+	bool getScoreFlag;
+	int currentScore;
+	Label *score;
 };
 
 #endif
