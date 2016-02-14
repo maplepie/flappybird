@@ -38,6 +38,8 @@ private:
 	bool getScoreFlag;
 	int currentScore;
 	Label *score;
+
+	Menu * menu;
 };
 
 #endif

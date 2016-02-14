@@ -16,6 +16,8 @@ bool PlayScene::init()
 		return false;
 	}
 
+	currentScore = 0;
+
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	//背景
@@ -86,12 +88,10 @@ bool PlayScene::init()
 	this->addChild(startGameTeach);
 
 	score = Label::createWithSystemFont("0", "Arial", 40);
-	auto scoreLabel = MenuItemLabel::create(score);
-	scoreLabel->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*7 / 8));
-	Menu * labelMenu = Menu::create(scoreLabel, NULL);
-	labelMenu->setAnchorPoint(Vec2::ZERO);
-	labelMenu->setPosition(Vec2::ZERO);
-	this->addChild(labelMenu);
+	score->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*7 / 8));
+	
+	this->addChild(score);
+//	scoreLabel->setVisible(false);
 
 	getScoreFlag = true;
 
@@ -131,8 +131,28 @@ bool PlayScene::isLoseGame()
 
 void PlayScene::createMenu()
 {
+	//TODO 增加历史最高分和现在的分数
+
 	auto result = MenuItemImage::create("result.png", "result.png");
 	result->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
+	result->setName("result");
+
+	auto s = __String::createWithFormat("%d",currentScore);
+	auto mCurrentScore = Label::createWithSystemFont(s->getCString(), "Arial", 20);
+	mCurrentScore->setPosition(result->getContentSize().width*27/32,result->getContentSize().height*11/18);
+	result->addChild(mCurrentScore);
+
+	int bestScore = UserDefault::getInstance()->getIntegerForKey("bestscore", 0);
+	if (currentScore > bestScore)
+	{
+		bestScore = currentScore;
+	}
+	auto b = __String::createWithFormat("%d", bestScore);
+	auto mBestScore = Label::createWithSystemFont(b->getCString(), "Arial", 20);
+	mBestScore->setPosition(result->getContentSize().width * 27 / 32, result->getContentSize().height * 5 / 18);
+	result->addChild(mBestScore);
+
+	UserDefault::getInstance()->setIntegerForKey("bestscore", bestScore);
 
 	auto gameover = MenuItemImage::create("gameover.png","gameover.png");
 	gameover->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + result->getContentSize().height));
@@ -146,11 +166,18 @@ void PlayScene::createMenu()
 	auto scoreMenuItem = MenuItemImage::create("rank.png", "rank.png", CC_CALLBACK_1(PlayScene::scoreMenu, this));
 	scoreMenuItem->setAnchorPoint(Vec2(0.5, 0));
 	scoreMenuItem->setPosition(Vec2(visibleSize.width * 3 / 4, ground1->getContentSize().height));
+//	scoreMenuItem->setName("score");
 
-	Menu* menu = Menu::create(result,gameover,startMenuItem,scoreMenuItem,NULL);
+	auto ranks = MenuItemImage::create("ranks.png", "ranks.png");
+	ranks->setPosition(Vec2(visibleSize.width / 2, visibleSize.height * 9 / 20));
+	ranks->setName("ranks");
+	ranks->setVisible(false);
+
+	menu = Menu::create(result,gameover,startMenuItem,scoreMenuItem,ranks,NULL);
 	menu->setTag(10);
 	menu->setAnchorPoint(Vec2::ZERO);
 	menu->setPosition(Vec2::ZERO);
+	
 	
 	this->addChild(menu);
 	log("create menu");
@@ -165,20 +192,26 @@ void PlayScene::startGame(Ref * pSender)
 
 void PlayScene::scoreMenu(Ref * pSender)
 {
-	this->removeChildByTag(10);
+//	this->removeChildByTag(10);
 	log("score");
+	auto s = __String::createWithFormat("result");
+	auto result = menu->getChildByName(s->getCString());
+	auto ranks = menu->getChildByName("ranks");
+	if (result->isVisible())
+	{
+		result->setVisible(false);
+		ranks->setVisible(true);
+		
+	}
+	else
+	{
+		result->setVisible(true);
+		ranks->setVisible(false);
+	}
+	//TODO 增加历史分数
 }
-/*
-void PlayScene::teachMenu(Ref * pSender)
-{
-	this->setTouchEnabled(true);
-	this->setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
-	//添加计时器
-	this->scheduleUpdate();
-	this->removeChildByTag(100);
-	bird->runAction(MoveBy::create(0.25, Vec2(0, bird->getContentSize().height * 3)));
-}
-*/
+
+
 bool PlayScene::onTouchBegan(Touch * touch, Event * event)
 {
 	if (startGameTeach->isVisible())
@@ -281,7 +314,6 @@ void PlayScene::update(float delay)
 
 	if (getScoreFlag&&(pipe1->getPositionX() <= bird->getPositionX()||pipe3->getPositionX() <= bird->getPositionX()))
 	{
-		log("score+1");
 		score->setString(__String::createWithFormat("%d", ++currentScore)->getCString());
 		getScoreFlag = false;
 	}
