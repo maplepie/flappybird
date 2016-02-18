@@ -143,16 +143,32 @@ void PlayScene::createMenu()
 	result->addChild(mCurrentScore);
 
 	int bestScore = UserDefault::getInstance()->getIntegerForKey("bestscore", 0);
-	if (currentScore > bestScore)
+	int thirdScore = UserDefault::getInstance()->getIntegerForKey("thirdScore", 0);
+	int secondScore = UserDefault::getInstance()->getIntegerForKey("secondScore", 0);
+	if (currentScore >= bestScore)
 	{
+		thirdScore = secondScore;
+		secondScore = bestScore;
 		bestScore = currentScore;
 	}
+	else if (currentScore >= secondScore)
+	{
+		thirdScore = secondScore;
+		secondScore = currentScore;
+	}
+	else if (currentScore > thirdScore)
+	{
+		thirdScore = currentScore;
+	}
+	UserDefault::getInstance()->setIntegerForKey("bestscore", bestScore);
+	UserDefault::getInstance()->setIntegerForKey("secondScore", secondScore);
+	UserDefault::getInstance()->setIntegerForKey("thirdScore", thirdScore);
+	log("first:%d,second:%d,third:%d", bestScore, secondScore, thirdScore);
 	auto b = __String::createWithFormat("%d", bestScore);
 	auto mBestScore = Label::createWithSystemFont(b->getCString(), "Arial", 20);
 	mBestScore->setPosition(result->getContentSize().width * 27 / 32, result->getContentSize().height * 5 / 18);
 	result->addChild(mBestScore);
 
-	UserDefault::getInstance()->setIntegerForKey("bestscore", bestScore);
 
 	auto gameover = MenuItemImage::create("gameover.png","gameover.png");
 	gameover->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + result->getContentSize().height));
@@ -180,7 +196,7 @@ void PlayScene::createMenu()
 	
 	
 	this->addChild(menu);
-	log("create menu");
+	
 }
 
 void PlayScene::startGame(Ref * pSender)
@@ -209,6 +225,24 @@ void PlayScene::scoreMenu(Ref * pSender)
 		ranks->setVisible(false);
 	}
 	//TODO 增加历史分数
+	int bestScore = UserDefault::getInstance()->getIntegerForKey("bestscore", 0);
+	auto b = __String::createWithFormat("%d", bestScore);
+	auto mBestScore = Label::createWithSystemFont(b->getCString(), "Arial", 30);
+	mBestScore->setPosition(ranks->getContentSize().width *10/ 19, ranks->getContentSize().height * 5/4);
+	ranks->addChild(mBestScore);
+
+	int secondScore = UserDefault::getInstance()->getIntegerForKey("secondScore", 0);
+	auto c = __String::createWithFormat("%d", secondScore);
+	auto mSecondScore = Label::createWithSystemFont(c->getCString(), "Arial", 28);
+	mSecondScore->setPosition(ranks->getContentSize().width * 1 / 6, ranks->getContentSize().height * 1);
+	ranks->addChild(mSecondScore);
+
+	int thirdScore = UserDefault::getInstance()->getIntegerForKey("thirdScore", 0);
+	auto d = __String::createWithFormat("%d", thirdScore);
+	auto mThirdScore = Label::createWithSystemFont(d->getCString(), "Arial", 27);
+	mThirdScore->setPosition(ranks->getContentSize().width * 6 / 7, ranks->getContentSize().height * 6/7);
+	ranks->addChild(mThirdScore);
+
 }
 
 
@@ -220,8 +254,10 @@ bool PlayScene::onTouchBegan(Touch * touch, Event * event)
 		this->scheduleUpdate();
 	}
 
+	AudioEngine::play2d("sfx_wing.ogg");
 //	bird->setPositionY(bird->getContentSize().height / 2);
 	bird->runAction(MoveBy::create(0.25, Vec2(0, bird->getContentSize().height*3)));
+	
 	return false;
 }
 
@@ -302,10 +338,12 @@ void PlayScene::update(float delay)
 		bird->stopAllActions();
 //		auto dead = Director::getInstance()->getTextureCache()->addImage("bird3.png");
 		bird->setTexture("bird3.png");
+		AudioEngine::play2d("sfx_hit.ogg");
 		bird->setAnchorPoint(Vec2(1, 0.5));
 		bird->setPositionX(bird->getPositionX()+bird->getContentSize().width/2);
 		auto action = Spawn::create(MoveTo::create(1, Vec2(bird->getPositionX(), ground1->getContentSize().height + bird->getContentSize().height / 2)), CallFunc::create(CC_CALLBACK_0(PlayScene::createMenu,this)),NULL);
 		bird->runAction(action);
+		AudioEngine::play2d("sfx_die.ogg");
 	}
 	else 
 	{//下降
@@ -316,6 +354,7 @@ void PlayScene::update(float delay)
 	{
 		score->setString(__String::createWithFormat("%d", ++currentScore)->getCString());
 		getScoreFlag = false;
+		AudioEngine::play2d("sfx_point.ogg");
 	}
 
 
@@ -327,4 +366,5 @@ void PlayScene::onExit()
 	log("onExit");
 	this->unscheduleAllSelectors();
 	this->setTouchEnabled(false);
+//	AudioEngine::end();
 }

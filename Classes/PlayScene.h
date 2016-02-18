@@ -3,6 +3,9 @@
 
 #include"cocos2d.h"
 USING_NS_CC;
+#include "audio/include/AudioEngine.h"
+
+using namespace experimental;
 
 class PlayScene :Layer
 {

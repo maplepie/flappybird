@@ -1,6 +1,9 @@
 #include "AppDelegate.h"
 //#include "HelloWorldScene.h"
 #include "StartScene.h"
+#include "audio/include/AudioEngine.h"
+
+using namespace experimental;
 
 USING_NS_CC;
 
@@ -83,6 +86,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
+
+	AudioEngine::preload("sfx_point.ogg");
+	AudioEngine::preload("sfx_hit.ogg");
+	AudioEngine::preload("sfx_wing.ogg");
+	AudioEngine::preload("sfx_die.ogg");
 
     return true;
 }
