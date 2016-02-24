@@ -2,12 +2,13 @@
 #define __PLAY_SCENE_H__
 
 #include"cocos2d.h"
+#include "BaseLayer.h"
 USING_NS_CC;
 #include "audio/include/AudioEngine.h"
 
 using namespace experimental;
 
-class PlayScene :Layer
+class PlayScene :BaseLayer
 {
 public:
 	static Scene* createScene();
@@ -28,14 +29,14 @@ public:
 
 	CREATE_FUNC(PlayScene)
 private:
-	Sprite * bird;
+//	Sprite * bird;
 	Sprite * ground1;
 	Sprite * ground2;
 	Sprite * pipe1;
 	Sprite * pipe2;
 	Sprite * pipe3;
 	Sprite * pipe4;
-	Size visibleSize;
+//	Size visibleSize;
 	Sprite * startGameTeach;
 
 	bool getScoreFlag;

@@ -2,9 +2,10 @@
 #define __START_SCENE_H__
 
 #include "cocos2d.h"
+#include "BaseLayer.h"
 USING_NS_CC;
 
-class StartScene: Layer
+class StartScene: BaseLayer
 {
 public:
 	static Scene * createScene();
