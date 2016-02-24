@@ -4,10 +4,12 @@
 #include "cocos2d.h"
 USING_NS_CC;
 
+
 class MyFunction 
 {
 public:
 	static void playGame();
+	static float myRandom();
 private:
 
 };

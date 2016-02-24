@@ -12,7 +12,7 @@ class PlayScene :Layer
 public:
 	static Scene* createScene();
 	virtual bool init();
-	static float myRandom();
+//	static float myRandom();
 	bool isLoseGame();
 	void createMenu();
 	void startGame(Ref *pSender);

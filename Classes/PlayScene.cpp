@@ -1,4 +1,5 @@
 #include"PlayScene.h"
+#include"MyFunction.h"
 #define BACKGROUNGSPEED 0.9f
 
 Scene * PlayScene::createScene()
@@ -59,7 +60,7 @@ bool PlayScene::init()
 	//添加水管
 	pipe1 = Sprite::create("down.png");
 	pipe1->setAnchorPoint(Vec2::ZERO);
-	pipe1->setPosition(Vec2(visibleSize.width,ground1->getContentSize().height/2*myRandom()));
+	pipe1->setPosition(Vec2(visibleSize.width,ground1->getContentSize().height/2*MyFunction::myRandom()));
 	pipe1->setLocalZOrder(0);
 	this->addChild(pipe1);
 
@@ -71,7 +72,7 @@ bool PlayScene::init()
 
 	pipe3 = Sprite::create("down.png");
 	pipe3->setAnchorPoint(Vec2::ZERO);
-	pipe3->setPosition(Vec2(visibleSize.width*3/2+pipe3->getContentSize().width/2, ground1->getContentSize().height / 2 * myRandom()));
+	pipe3->setPosition(Vec2(visibleSize.width*3/2+pipe3->getContentSize().width/2, ground1->getContentSize().height / 2 * MyFunction::myRandom()));
 	pipe3->setLocalZOrder(0);
 	this->addChild(pipe3);
 
@@ -91,7 +92,6 @@ bool PlayScene::init()
 	score->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*7 / 8));
 	
 	this->addChild(score);
-//	scoreLabel->setVisible(false);
 
 	getScoreFlag = true;
 
@@ -101,18 +101,6 @@ bool PlayScene::init()
 	return true;
 }
 
-float PlayScene::myRandom()
-{
-	struct timeval nowTimeval;
-	gettimeofday(&nowTimeval, NULL);
-	long second = nowTimeval.tv_sec;
-	long microsecond = nowTimeval.tv_usec;
-//	log("%d,%d", second, microsecond);
-	unsigned int seed = second * 1000 + microsecond / 1000 + rand();
-	srand(seed);
-
-	return CCRANDOM_0_1()*2-1;
-}
 
 bool PlayScene::isLoseGame()
 {
@@ -300,7 +288,7 @@ void PlayScene::update(float delay)
 		pipe1->setPositionX(visibleSize.width);
 		pipe2->setPositionX(visibleSize.width);
 		// 添加随机高度
-		pipe1->setPositionY(ground1->getContentSize().height / 2 * myRandom());
+		pipe1->setPositionY(ground1->getContentSize().height / 2 * MyFunction::myRandom());
 		pipe2->setPositionY(pipe1->getPositionY() + pipe1->getContentSize().height + visibleSize.height / 5);
 
 		getScoreFlag = true;
@@ -317,7 +305,7 @@ void PlayScene::update(float delay)
 		pipe3->setPositionX(visibleSize.width);
 		pipe4->setPositionX(visibleSize.width);
 		// 添加随机高度
-		pipe3->setPositionY(ground1->getContentSize().height / 2 * myRandom());
+		pipe3->setPositionY(ground1->getContentSize().height / 2 * MyFunction::myRandom());
 		pipe4->setPositionY(pipe3->getPositionY() + pipe3->getContentSize().height + visibleSize.height / 5);
 
 		getScoreFlag = true;
