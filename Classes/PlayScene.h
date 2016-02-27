@@ -44,6 +44,8 @@ private:
 	Label *score;
 
 	Menu * menu;
+
+
 };
 
 #endif

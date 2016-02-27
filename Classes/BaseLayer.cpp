@@ -1,4 +1,5 @@
 #include"BaseLayer.h"
+#include"PlayScene.h"
 
 
 
@@ -33,6 +34,9 @@ bool BaseLayer::init()
 
 	return true;
 }
+
+
+
 /*
 Scene * BaseLayer::createScene(BaseLayer &baseLayer)
 {

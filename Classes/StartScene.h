@@ -11,8 +11,10 @@ public:
 	static Scene * createScene();
 	virtual bool init();
 
-	void startGame(Ref *pSender);
+	virtual void startGame(Ref *pSender);
 	void scoreMenu(Ref * pSender);
+
+	MenuItemImage *ranks;
 
 	CREATE_FUNC(StartScene);
 };

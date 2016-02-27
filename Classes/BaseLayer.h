@@ -10,6 +10,7 @@ class BaseLayer : public Layer
 public:
 
 	virtual bool init();
+	void startGame(Ref *pSender);
 //	static Scene * createScene(BaseLayer *baseLayer);
 
 	CREATE_FUNC(BaseLayer);

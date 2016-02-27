@@ -59,16 +59,20 @@ bool PlayScene::init()
 	pipe4->setLocalZOrder(0);
 	this->addChild(pipe4);
 
-	
-
 	startGameTeach = Sprite::create("teach.png");
 	startGameTeach->setPosition(Vec2(visibleSize.width/2, visibleSize.height/2));
 	this->addChild(startGameTeach);
 
 	score = Label::createWithSystemFont("0", "Arial", 40);
 	score->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*7 / 8));
-	
 	this->addChild(score);
+
+
+
+
+	
+
+
 
 	getScoreFlag = true;
 
@@ -217,11 +221,22 @@ bool PlayScene::onTouchBegan(Touch * touch, Event * event)
 	{
 		startGameTeach->setVisible(false);
 		this->scheduleUpdate();
+	
 	}
 
 	AudioEngine::play2d("sfx_wing.ogg");
-//	bird->setPositionY(bird->getContentSize().height / 2);
-	bird->runAction(MoveBy::create(0.25, Vec2(0, bird->getContentSize().height*3)));
+	bird->stopActionByTag(500);
+	auto action1 = Spawn::create(
+		MoveBy::create(0.25, Vec2(0, bird->getContentSize().height * 3)),
+		Sequence::create(
+			RotateTo::create(0.2f,345),
+			DelayTime::create(0.4f),
+			RotateTo::create(0.4f,90),
+			NULL),
+		NULL
+		);
+	action1->setTag(500);
+	bird->runAction(action1);
 	
 	return false;
 }

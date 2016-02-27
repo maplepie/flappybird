@@ -55,5 +55,40 @@ void StartScene::startGame(Ref *pSender)
 
 void StartScene::scoreMenu(Ref * pSender)
 {
-	log("score");
+	if (ranks&&ranks->isVisible())
+	{
+		ranks->setVisible(false);
+	}
+	else if (ranks&&!ranks->isVisible())
+	{
+		ranks->setVisible(true);
+	}
+	else
+	{
+		ranks = MenuItemImage::create("ranks.png", "ranks.png");
+		ranks->setPosition(Vec2(visibleSize.width / 2, visibleSize.height * 9 / 20));
+
+		auto menu = Menu::create(ranks, NULL);
+		menu->setAnchorPoint(Vec2::ZERO);
+		menu->setPosition(Vec2::ZERO);
+		this->addChild(menu);
+
+		int bestScore = UserDefault::getInstance()->getIntegerForKey("bestscore", 0);
+		auto b = __String::createWithFormat("%d", bestScore);
+		auto mBestScore = Label::createWithSystemFont(b->getCString(), "Arial", 30);
+		mBestScore->setPosition(ranks->getContentSize().width * 10 / 19, ranks->getContentSize().height * 5 / 4);
+		ranks->addChild(mBestScore);
+
+		int secondScore = UserDefault::getInstance()->getIntegerForKey("secondScore", 0);
+		auto c = __String::createWithFormat("%d", secondScore);
+		auto mSecondScore = Label::createWithSystemFont(c->getCString(), "Arial", 28);
+		mSecondScore->setPosition(ranks->getContentSize().width * 1 / 6, ranks->getContentSize().height * 1);
+		ranks->addChild(mSecondScore);
+
+		int thirdScore = UserDefault::getInstance()->getIntegerForKey("thirdScore", 0);
+		auto d = __String::createWithFormat("%d", thirdScore);
+		auto mThirdScore = Label::createWithSystemFont(d->getCString(), "Arial", 27);
+		mThirdScore->setPosition(ranks->getContentSize().width * 6 / 7, ranks->getContentSize().height * 6 / 7);
+		ranks->addChild(mThirdScore);
+	}
 }
